@@ -352,7 +352,7 @@ IsInCircle <- function(interpolation.surface, electrode.positions,
   x <- electrode.pos[, 1]
   y <- electrode.pos[, 2]
   
-  elec.sphere <- tripack::circumcircle(x, y, num.touch = 2, plot = FALSE, 
+  elec.sphere <- tripack::circumcircle(x, y, num.touch = 3, plot = FALSE, 
                                        debug = FALSE)
   center.sphere <- c(elec.sphere$x, elec.sphere$y)
   squared.distances <- t(
@@ -704,11 +704,14 @@ MakeSymmetric <- function(z.values) {
 #' #to be done
 MakeSymmetricLabels <- function(z.values, multiplication.factor = 10, 
                                 unit = NULL) {
+  if (is.null(unit)) {
+    unit.label = unit
+  }
   if (!is.null(unit)) {
-    (!any(c("mv", "fT", "mvcm2") %in% unit)) {
+    if (!any(c("mv", "fT", "mvcm2") %in% unit)) {
       stop("invalid unit!")
     } else {
-      if (unit == " mv") {
+      if (unit == "mv") {
         unit.label <- " mV"
       } else {
         if (unit == "fT") {

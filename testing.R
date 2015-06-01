@@ -80,7 +80,7 @@ ggplot(new.df, aes(x=x, y=y, fill=z)) + geom_raster(interpolate = TRUE) + theme_
 ggplot(new.df[!is.na(new.df$z), ], aes(x=x, y=y, fill=z)) + geom_raster(interpolate = TRUE) + theme_bw()
 
 
-
+new.df <- SimplifyTopographyList(test3)
 nb.colors <- 11
 my_pal <- function(x) {
   diverge_hcl(x, h = c(260, 0), c = 100, l = c(30, 100), power = 1, fixup = TRUE)
@@ -105,15 +105,26 @@ ggplot(new.df[!is.na(new.df$z), ],
   ) + guides(fill = guide_colorbar(nbin = nb.colors))
 
 
+new.df <- SimplifyTopographyList(test3)
 nb.colors <- 11
 symm.breaks <- MakeSymmetricCuts(new.df$z[!is.na(new.df$z)], nb.colors)
+angle <- seq(-pi, pi, length = 50)
+#df <- data.frame(
+#  x = (sin(angle) - min(new.df[!is.na(new.df$z), ]$x))/(max(new.df[!is.na(new.df$z), ]$x) - min(new.df[!is.na(new.df$z), ]$x)), 
+#  y = (cos(angle) - min(new.df[!is.na(new.df$z), ]$y))/(max(new.df[!is.na(new.df$z), ]$y) - min(new.df[!is.na(new.df$z), ]$y))
+#)
+#elec.sphere <- tripack::circumcircle(new.df[!is.na(new.df$z), ]$x, new.df[!is.na(new.df$z), ]$y, num.touch = 2, plot = FALSE, debug = FALSE)
+df <- data.frame(
+  x = sin(angle) * max(abs(new.df[!is.na(new.df$z), ]$x)) * 1.015, 
+  y = cos(angle) * max(abs(new.df[!is.na(new.df$z), ]$y)) * 1.015
+)
 ggplot(new.df[!is.na(new.df$z), ], 
        aes(x = x, y = y, fill = cut(z, breaks = symm.breaks, labels = FALSE))) + 
   geom_raster(interpolate = TRUE) + 
   scale_fill_gradient2(midpoint = mean(1:nb.colors),
                        limits = range(1:nb.colors),
                        breaks = seq(1, nb.colors, length = 3),
-                       labels = MakeSymmetricLabels(new.df$z, multiplication.factor = 1),
+                       labels = list(expression(alpha), expression(beta), expression(zeta)), #MakeSymmetricLabels(new.df$z, multiplication.factor = 1, unit = "mv"),
                        name = "goo"
   ) +
   theme_bw() + 
@@ -125,6 +136,8 @@ ggplot(new.df[!is.na(new.df$z), ],
         #legend.position = "bottom",
         legend.position = "right",
         legend.title = element_text("goo")
-  ) + guides(fill = guide_colorbar(nbin = nb.colors), name = "goo")
+  ) + guides(fill = guide_colorbar(nbin = nb.colors)) +
+  geom_path(aes(x, y), data = df , inherit.aes = FALSE) +
+  coord_fixed() 
 
 
