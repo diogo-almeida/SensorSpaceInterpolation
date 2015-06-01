@@ -1,9 +1,14 @@
 Package: SensorSpaceInterpolation
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: Interpolates EEG/MEG data from sensors onto a cartesian space.
+Version: 0.0.1
 Date: 2015-06-01
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Diogo Almeida
+Maintainer: Diogo Almeida <dalazal@gmail.com>
+Description: Interpolates.
+License: GPL-3
+LazyData: true
+Imports: plyr,
+    akima,
+    tripack,
+    rgcvpack

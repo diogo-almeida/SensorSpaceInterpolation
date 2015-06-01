@@ -550,7 +550,7 @@ InterpolateAkima <- function(potentials, x, y,
   elec.loc <- data.frame(x1, y1)
   x.vertices <- xo
   y.vertices <- xo
-  interpolated.potentials <- interp(x = x1, y = y1, z = potentials, 
+  interpolated.potentials <- akima::interp(x = x1, y = y1, z = potentials, 
                                     xo = x.vertices, yo = y.vertices,
                                     extrap = extrapolate, linear = linear)
   interpolation.grid <- FormatPosition(x.vertices, y.vertices)
@@ -619,8 +619,9 @@ InterpolateTPS <- function(potentials, x, y, xo, yo, grid.grain,
   y.vertices <- xo
   interpolation.grid <- FormatPosition(x.vertices, y.vertices)
   interpolation.surface <- CreateInterpolationSurface(interpolation.grid)
-  fitted.surface <- fitTps(elec.loc, y = potentials)
-  interpolated.surface <- predict.Tps(fitted.surface, interpolation.surface)
+  fitted.surface <- rgcvpack::fitTps(elec.loc, y = potentials)
+  interpolated.surface <- rgcvpack::predict.Tps(fitted.surface, 
+                                                interpolation.surface)
   out.xo <- x.vertices
   out.yo <- y.vertices
   out.zo <- matrix(interpolated.surface, nrow = length(x.vertices), 
