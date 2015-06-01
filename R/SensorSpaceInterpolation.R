@@ -702,10 +702,30 @@ MakeSymmetric <- function(z.values) {
 #' @examples
 #' #Tests
 #' #to be done
-MakeSymmetricLabels <- function(z.values, multiplication.factor = 10) {
+MakeSymmetricLabels <- function(z.values, multiplication.factor = 10, 
+                                unit = NULL) {
+  if (!is.null(unit)) {
+    (!any(c("mv", "fT", "mvcm2") %in% unit)) {
+      stop("invalid unit!")
+    } else {
+      if (unit == " mv") {
+        unit.label <- " mV"
+      } else {
+        if (unit == "fT") {
+          unit.label <- " fT"
+        } else {
+          if (unit == "mvcm2") {
+            unit.label <- " mV/cm2"
+          } else{
+            unit.label <- NULL
+          }
+        }
+      }
+    }
+  }
   z1   <- MakeSymmetric(z.values)
   low  <- round(min(z1) * multiplication.factor)
-  mid  <- "0"
+  mid  <- paste0("0", unit.label)
   high <- round(max(z1) * multiplication.factor)
   c(low, mid, high)
 }
