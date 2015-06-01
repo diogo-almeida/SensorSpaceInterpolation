@@ -39,7 +39,7 @@
 #' ##yvec <- letters[1:10]
 #' ##FormatPosition(xvec, yvec) # Error, y is a character string
 #' 
-#  ##Input is a matrix
+#'  ##Input is a matrix
 #' ##xmat1 <- matrix(1:10, nrow = 2)
 #' ##FormatPosition(xmat1)
 #' ##xmat2 <- matrix(1:12, ncol = 3)
@@ -443,18 +443,18 @@ InterpolatePotentials <- function(potentials, x.elec, y.elec = NULL,
   if (any(method == "linear", method == "cubic")) {
     interp.fnc <- "InterpolateAkima"
     if(method == "linear") {
-      linear = TRUE
+      linear <- TRUE
     }
   } else {
     if (method == "tps") {
-      interp.fnc = "InterpolateTPS"
+      interp.fnc <- "InterpolateTPS"
     } else {
       stop("'method' has to be either 'linear', 'cubic', or 'tps'.")
     }
   }
-  x1   <- electrode.locations[, 1]
-  y1   <- electrode.locations[, 2]
-  z1   <- as.matrix(potentials)
+  x1  <- electrode.locations[, 1]
+  y1  <- electrode.locations[, 2]
+  z1  <- as.matrix(potentials)
   xo  <- surface.vertices[, 1]
   yo  <- surface.vertices[, 2]
   
@@ -636,5 +636,99 @@ InterpolateTPS <- function(potentials, x, y, xo, yo, grid.grain,
        y = out.yo,
        z = out.zo
   )       
+}
+
+#' @title Simplify a list to save space
+#' 
+#' @description Simplify a list to save space.
+#'
+#' @details The output of function InterpolatePotentials is very redundant. 
+#'   This function simplifies it by removing the x, y fields from every item on 
+#'   the list, since they are always the same.
+#'   
+#' @param topography.list A list. Natural output of function 
+#'   InterpolatePotentials
+#' 
+#' @return List with interpolated potentials for each time slice, simplified.
+#'   
+#' @seealso
+#'   
+#' @export
+#'    
+#' @examples
+#' #Tests
+#' #to be done
+SimplifyTopographyList <- function(topography.list) {
+  in.list <- topography.list[[1]]
+  out.list <- cbind(expand.grid(in.list$x, in.list$y), as.vector(in.list$z))
+  colnames(out.list) <- names(in.list)
+  out.list
+}
+
+#' @title Make a symmetric range for color bar
+#' 
+#' @description Make a symmetric range for color bar
+#'
+#' @param z.values A vector of potentials.
+#' 
+#' @return vector of length 2 with symmetric range.
+#'   
+#' @seealso
+#'   
+#' @export
+#'    
+#' @examples
+#' #Tests
+#' #to be done
+MakeSymmetric <- function(z.values) {
+  z1 <- c(max(abs(range(z.values, na.rm = TRUE))))
+  c(-z1, z1)
+}
+
+#' @title Create labels for symmetric color bar
+#' 
+#' @description Create labels for symmetric color bar
+#'
+#' @param z.values A vector of potentials.
+#' 
+#' @param multiplication.factor Correction factor for graphic display of units of measurement (generally microvolts or femtotesla).
+#' 
+#' @return vector of length 3 with symmetric range around 0.
+#'   
+#' @seealso
+#'   
+#' @export
+#'    
+#' @examples
+#' #Tests
+#' #to be done
+MakeSymmetricLabels <- function(z.values, multiplication.factor = 10) {
+  z1   <- MakeSymmetric(z.values)
+  low  <- round(min(z1) * multiplication.factor)
+  mid  <- "0"
+  high <- round(max(z1) * multiplication.factor)
+  c(low, mid, high)
+}
+
+#' @title Create range for asymmetric color bar
+#' 
+#' @description Create labels for symmetric color bar
+#'
+#' @param z.values A vector of potentials.
+#' 
+#' @param steps A scalar. Number of steps in color bar.
+#' 
+#' @return vector of length 'steps' for color bar.
+#'   
+#' @seealso
+#'   
+#' @export
+#'    
+#' @examples
+#' #Tests
+#' #to be done
+MakeSymmetricCuts <- function(z.values, steps) {
+  z1   <- MakeSymmetric(z.values)
+  seq(from = z1[1], to = z1[2], length = steps)
 }
 
