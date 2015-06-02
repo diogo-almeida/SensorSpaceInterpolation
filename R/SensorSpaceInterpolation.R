@@ -5,7 +5,7 @@
 #'   interpolation function.
 #' 
 #' @param x A matrix or a vector. If x is a matrix, it needs to have two columns
-#'   containig the (x, y) locations of the sensors, in which case y is not 
+#'   containing the (x, y) locations of the sensors, in which case y is not 
 #'   required. If it is a vector, it should contain the x-coordinates of the 
 #'   sensor.
 #'   
@@ -16,72 +16,7 @@
 #' @return This function returns a data.frame with two fields (x, y), properly 
 #'   formatted for the interpolation function.
 #'   
-#' @seealso
-#'   
 #' @export
-#'    
-#' @examples
-#' ## Tests
-#' ##Input x missing, should throw error
-#' # yvec <- 1:10
-#' # FormatPosition(y = yvec)
-#'
-#' # Inputs are vectors
-#' xvec <- 1:10
-#' yvec <- 1:10
-#' ##FormatPosition(xvec, yvec)
-#' ##xvec <- 1:10
-#' ##yvec <- 1:11
-#' ##FormatPosition(xvec, yvec)
-#' ##xvec <- 1:10
-#' ##FormatPosition(xvec)
-#' ##xvec <- 1:10
-#' ##yvec <- letters[1:10]
-#' ##FormatPosition(xvec, yvec) # Error, y is a character string
-#' 
-#'  ##Input is a matrix
-#' ##xmat1 <- matrix(1:10, nrow = 2)
-#' ##FormatPosition(xmat1)
-#' ##xmat2 <- matrix(1:12, ncol = 3)
-#' ##FormatPosition(xmat2)
-#' ##Inputs are one matrix and one vector
-#' #xmat1 <- matrix(1:12, ncol = 3)
-#' #yvec1 <- 1:12
-#' #yvec2 <- 1:4
-#' #FormatPosition(xmat1, yvec)
-#' #FormatPosition(yvec1, xmat1)
-#' #FormatPosition(yvec2, xmat1)
-#' ## Inputs are matrices
-#' #xmat1 <- matrix(1:10, nrow = 2)
-#' #xmat2 <- matrix(1:12, ncol = 3)
-#' #FormatPosition(xmat1, xmat2)
-#'  #Input x is a list
-#' #xlist <- list(a = 1:10)
-#' #FormatPosition(xlist)
-#' #xlist <- list(a = 1:10, b = 1:5)
-#' #FormatPosition(xlist)
-#' #xlist <- list(a = 1:10)
-#' #ylist <- list(c = 1:9)
-#' #FormatPosition(xlist, ylist)
-#' ## Inputs are two lists (second should be ignored)
-#' #xlist <- list(a = 1:10)
-#' #ylist <- list(c = 1:9)
-#' #FormatPosition(xlist, ylist)
-#' ## Input is a data.frame
-#' #xdf <- data.frame(a = 1:10)
-#' #FormatPosition(xdf)
-#' #xdf <- data.frame(a = 1:10, b = 10:1)
-#' #FormatPosition(xdf)
-#' ## Input is a data.frames and a vector
-#' #xvec <- 1:10
-#' #xdf <- data.frame(a = 1:10, b = 10:1)
-#' #FormatPosition(xdf, xvec)
-#' #FormatPosition(xvec, xdf)
-#' ## Input is a data.frame and a vector
-#' #xvec <- 1:10
-#' #xdf <- data.frame(a = 1:10, b = 10:1)
-#' #FormatPosition(xdf, xvec)
-#' #FormatPosition(xvec, xdf) # Error, y is a list/data.frame
 FormatPosition <- function(x, y = NULL) {
   #   desired input - output relationships:
   #   first argument 'x' is a [x, y] matrix
@@ -90,7 +25,8 @@ FormatPosition <- function(x, y = NULL) {
   #     -> pass x as is, y needs to be a vector of same type and length
   #   first argument 'x' is a data.frame of [x, y] form
   #     -> coerce x to matrix, y = NULL
-  #   first argument 'x' is a list of two fields {x, y}, each a vector of equal numeric type and length
+  #   first argument 'x' is a list of two fields {x, y}, each a vector of equal 
+  #     numeric type and length
   #     -> x1 <- list$x, y1 <- list$y
   
   x1 <- NULL
@@ -119,7 +55,7 @@ FormatPosition <- function(x, y = NULL) {
       x1 <- x$x
       y1 <- x$y
     }
-    if (any(!is.numeric(x1),!is.numeric(y1))) {
+    if (any(!is.numeric(x1), !is.numeric(y1))) {
       stop("Problem with list 'x': \n",
            "a) It may only contain one field, or\n",
            "b) One (or both) first two columns are not numeric vectors"
@@ -166,21 +102,16 @@ FormatPosition <- function(x, y = NULL) {
 #' @param sensor.space A matrix. This matrix should contain the x,y locations of
 #'   the sensors.
 #'   
-#' @param inflation. A scalar. This represents a small fudge factor to make sure
+#' @param inflation A scalar. This represents a small fudge factor to make sure
 #'   that the bounding rectangle will include all the sensors, in case there are
-#'   sensors that would fall exactly in the rectangle line.
+#'   sensors that would fall exactly in the rectangle line. Defaults to 5% of 
+#'   the rectangle dimensions.
 #'      
 #' @return This function returns a data.frame with the cartesian coordinates of
 #'   the bounding rectangle for the interpolation function.
 #'   
-#' @seealso
-#'   
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
-FindBoundingRectangle <- function(sensor.space, inflation = 1.15) {
+FindBoundingRectangle <- function(sensor.space, inflation = 1.05) {
   if (!is.matrix(sensor.space)) {
     sensors <- FormatPosition(sensor.space)
   } else {
@@ -213,13 +144,7 @@ FindBoundingRectangle <- function(sensor.space, inflation = 1.15) {
 #' @return This function returns a data.frame with the cartesian coordinates of
 #'   the bounding rectangle for the interpolation function.
 #'   
-#' @seealso
-#'   
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 CreateGrid <- function(sensor.space, grain = 40L) {
   if (!is.matrix(sensor.space)) {
     sensors <- FormatPosition(sensor.space)
@@ -251,13 +176,7 @@ CreateGrid <- function(sensor.space, grain = 40L) {
 #' @return This function returns a data.frame with the cartesian coordinates of
 #'   the surface for interpolation.
 #'   
-#' @seealso
-#'   
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 CreateInterpolationSurface <- function(x, y = NULL) {
   if (!is.matrix(x)) {
     grid <- FormatPosition(x, y)
@@ -284,15 +203,9 @@ CreateInterpolationSurface <- function(x, y = NULL) {
 #' @return This function returns TRUE or FALSE depending on whether a point is
 #'   inside the convex hull.
 #'   
-#' @seealso
-#'   
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 IsInConvexHull <- function(interpolation.surface, electrode.positions) {
-  if (!require("tripack")) install.packages("tripack")
+  #if (!require("tripack")) install.packages("tripack")
   
   if (!is.matrix(electrode.positions)) {
     electrode.pos <- FormatPosition(electrode.positions)
@@ -322,23 +235,17 @@ IsInConvexHull <- function(interpolation.surface, electrode.positions) {
 #' @param electrode.positions A matrix containing the (x, y) locations of the 
 #'   EEG/MEG sensors.
 #'
-#' @param inflation. A scalar. This represents a small fudge factor to make sure
+#' @param inflation A scalar. This represents a small fudge factor to make sure
 #'   that the bounding circle will include all the sensors, in case there are
 #'   sensors that would fall exactly in the circle line.
 #'      
 #' @return This function returns TRUE or FALSE depending on whether a point is
 #'   inside the circumcircle.
 #'   
-#' @seealso
-#'   
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 IsInCircle <- function(interpolation.surface, electrode.positions, 
                        inflation = 1e-7) {
-  if (!require("tripack")) install.packages("tripack")
+  #if (!require("tripack")) install.packages("tripack")
   GetDistanceFromCenter <- function(point, center) {
     point - center
   }
@@ -380,7 +287,7 @@ IsInCircle <- function(interpolation.surface, electrode.positions,
 #'   
 #' @param y.elec A vector. The y-coordinates of the sensors.
 #'
-#' @param grain A scalar. This represents that spacing between the points in the
+#' @param grid.grain A scalar. This represents that spacing between the points in the
 #'   grid. Defaults to 40, to create a relatively coarse surface. Higher values
 #'   will create a more fine-grained, and therefore smoother-looking surface. 
 #'      
@@ -405,23 +312,17 @@ IsInCircle <- function(interpolation.surface, electrode.positions,
 #'   Defaults to false.
 #' 
 #' @return List with interpolated potentials for each time slice.
-#'   
-#' @seealso
-#'   
+#' 
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 InterpolatePotentials <- function(potentials, x.elec, y.elec = NULL, 
                                   grid.grain = 40L, x.vert = NULL, 
                                   y.vert = NULL, extrapolate = FALSE, 
                                   method = c("linear", "cubic", "tps"),
                                   electrode.dim = NULL, simplify = FALSE) {
   
-  if (!require("plyr")) install.packages("plyr")
-  if (!require("akima")) install.packages("akima")
-  if (!require("rgcvpack")) install.packages("rgcvpack")
+  #if (!require("plyr")) install.packages("plyr")
+  #if (!require("akima")) install.packages("akima")
+  #if (!require("rgcvpack")) install.packages("rgcvpack")
   
   if (!is.matrix(x.elec)) {
     electrode.locations <- FormatPosition(x.elec, y.elec)
@@ -481,7 +382,7 @@ InterpolatePotentials <- function(potentials, x.elec, y.elec = NULL,
   # Call plyr for the data structure with the user-selected interpolation
   # function.
   # cat(dim(z1), time.dimension, n.electrodes)
-  out <- alply(.data = z1, .margins = time.dimension, 
+  out <- plyr::alply(.data = z1, .margins = time.dimension, 
                .fun = eval(parse(text = interp.fnc)), 
                x = x1, y = y1, xo = xo, yo = yo, grid.grain = grid.grain, 
                extrap = extrapolate, linear = linear)
@@ -520,14 +421,8 @@ InterpolatePotentials <- function(potentials, x.elec, y.elec = NULL,
 #'   method? Defaults to FALSE, which uses cubic interpolation.
 #' 
 #' @return List with interpolated potentials for each time slice.
-#'   
-#' @seealso
-#'   
+#' 
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 InterpolateAkima <- function(potentials, x, y, 
                              xo = seq(min(x), max(x), length = 40), 
                              yo = seq(min(y), max(y), length = 40),
@@ -536,7 +431,7 @@ InterpolateAkima <- function(potentials, x, y,
   # Note: 'grid.grain' is ignored in this function. It is here only to guarantee
   # interface compatibility with the InterpolateTPS function.
   
-  if (!require("akima")) install.packages("akima")
+  #if (!require("akima")) install.packages("akima")
   
   if (any(length(x) != length(y), length(x) != length(potentials))) {
     stop("arguments 'x' and 'y', and 'potentials' differ in length!\n",
@@ -599,17 +494,11 @@ InterpolateAkima <- function(potentials, x, y,
 #'   method? Defaults to FALSE, which uses cubic interpolation.
 #' 
 #' @return List with interpolated potentials for each time slice.
-#'   
-#' @seealso
-#'   
+#' 
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 InterpolateTPS <- function(potentials, x, y, xo, yo, grid.grain, 
                            extrapolate = FALSE, linear = NULL) {
-  if (!require("rgcvpack")) install.packages("rgcvpack")
+  #if (!require("rgcvpack")) install.packages("rgcvpack")
   # Note: 'linear' is ignored
   #out.xo <- xo # these two vectors are going to be ignored as well.
   #out.yo <- yo
@@ -650,14 +539,8 @@ InterpolateTPS <- function(potentials, x, y, xo, yo, grid.grain,
 #'   InterpolatePotentials
 #' 
 #' @return List with interpolated potentials for each time slice, simplified.
-#'   
-#' @seealso
-#'   
+#' 
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 SimplifyTopographyList <- function(topography.list) {
   in.list <- topography.list[[1]]
   out.list <- cbind(expand.grid(in.list$x, in.list$y), as.vector(in.list$z))
@@ -672,14 +555,8 @@ SimplifyTopographyList <- function(topography.list) {
 #' @param z.values A vector of potentials.
 #' 
 #' @return vector of length 2 with symmetric range.
-#'   
-#' @seealso
-#'   
+#' 
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 MakeSymmetric <- function(z.values) {
   z1 <- c(max(abs(range(z.values, na.rm = TRUE))))
   c(-z1, z1)
@@ -691,17 +568,16 @@ MakeSymmetric <- function(z.values) {
 #'
 #' @param z.values A vector of potentials.
 #' 
-#' @param multiplication.factor Correction factor for graphic display of units of measurement (generally microvolts or femtotesla).
+#' @param multiplication.factor Correction factor for graphic display of units 
+#'   of measurement (generally microvolts or femtotesla).
+#'   
+#' @param unit A string. Can be either 'mV' (for microvolts, usually for EEG 
+#'   data), 'fT' (for femtotesla, usually for MEG data) or 'mVcm2' (for 
+#'   microvolts over squared centimeters, usually for CSD transformed EEG data).
 #' 
 #' @return vector of length 3 with symmetric range around 0.
-#'   
-#' @seealso
-#'   
+#' 
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 MakeSymmetricLabels <- function(z.values, multiplication.factor = 10, 
                                 unit = NULL) {
   if (is.null(unit)) {
@@ -742,14 +618,8 @@ MakeSymmetricLabels <- function(z.values, multiplication.factor = 10,
 #' @param steps A scalar. Number of steps in color bar.
 #' 
 #' @return vector of length 'steps' for color bar.
-#'   
-#' @seealso
-#'   
+#' 
 #' @export
-#'    
-#' @examples
-#' #Tests
-#' #to be done
 MakeSymmetricCuts <- function(z.values, steps) {
   z1   <- MakeSymmetric(z.values)
   seq(from = z1[1], to = z1[2], length = steps)

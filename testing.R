@@ -242,3 +242,75 @@ leg[[1]][[1]]$heights[[2]]
 # Independent color bar function
 # http://colbyimaging.duckdns.org:8080/wiki/statistics/color-bars
 #
+
+
+
+
+###
+### Unused lines from documentations
+###
+### FORMATPOSION    
+#' #examples
+#' ## Tests
+#' ##Input x missing, should throw error
+#' # yvec <- 1:10
+#' # FormatPosition(y = yvec)
+#'
+#' # Inputs are vectors
+#' # xvec <- 1:10
+#' # yvec <- 1:10
+#' ##FormatPosition(xvec, yvec)
+#' ##xvec <- 1:10
+#' ##yvec <- 1:11
+#' ##FormatPosition(xvec, yvec)
+#' ##xvec <- 1:10
+#' ##FormatPosition(xvec)
+#' ##xvec <- 1:10
+#' ##yvec <- letters[1:10]
+#' ##FormatPosition(xvec, yvec) # Error, y is a character string
+#' #
+#' ##Input is a matrix
+#' ##xmat1 <- matrix(1:10, nrow = 2)
+#' ##FormatPosition(xmat1)
+#' ##xmat2 <- matrix(1:12, ncol = 3)
+#' ##FormatPosition(xmat2)
+#' ##Inputs are one matrix and one vector
+#' #xmat1 <- matrix(1:12, ncol = 3)
+#' #yvec1 <- 1:12
+#' #yvec2 <- 1:4
+#' #FormatPosition(xmat1, yvec)
+#' #FormatPosition(yvec1, xmat1)
+#' #FormatPosition(yvec2, xmat1)
+#' ## Inputs are matrices
+#' #xmat1 <- matrix(1:10, nrow = 2)
+#' #xmat2 <- matrix(1:12, ncol = 3)
+#' #FormatPosition(xmat1, xmat2)
+#' ###Input x is a list
+#' #xlist <- list(a = 1:10)
+#' #FormatPosition(xlist)
+#' #xlist <- list(a = 1:10, b = 1:5)
+#' #FormatPosition(xlist)
+#' #xlist <- list(a = 1:10)
+#' #ylist <- list(c = 1:9)
+#' #FormatPosition(xlist, ylist)
+#' ## Inputs are two lists (second should be ignored)
+#' #xlist <- list(a = 1:10)
+#' #ylist <- list(c = 1:9)
+#' #FormatPosition(xlist, ylist)
+#' ## Input is a data.frame
+#' #xdf <- data.frame(a = 1:10)
+#' #FormatPosition(xdf)
+#' #xdf <- data.frame(a = 1:10, b = 10:1)
+#' #FormatPosition(xdf)
+#' ## Input is a data.frames and a vector
+#' #xvec <- 1:10
+#' #xdf <- data.frame(a = 1:10, b = 10:1)
+#' #FormatPosition(xdf, xvec)
+#' #FormatPosition(xvec, xdf)
+#' ## Input is a data.frame and a vector
+#' #xvec <- 1:10
+#' #xdf <- data.frame(a = 1:10, b = 10:1)
+#' #FormatPosition(xdf, xvec)
+#' #FormatPosition(xvec, xdf) # Error, y is a list/data.frame
+# 
+### FORMATPOSION    

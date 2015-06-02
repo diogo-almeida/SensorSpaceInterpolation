@@ -11,7 +11,7 @@ LazyData: true
 Imports: plyr,
     akima,
     tripack,
-    rgcvpack,
-    colorspace
+    rgcvpack
 Suggests: ggplot2,
-    fields
+    fields,
+    colorspace
