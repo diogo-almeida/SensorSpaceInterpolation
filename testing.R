@@ -255,7 +255,11 @@ leg[[1]][[1]]$heights[[2]]
 # Independent color bar function
 # http://colbyimaging.duckdns.org:8080/wiki/statistics/color-bars
 #
-
+# In general, plotting can be done using:
+# image.plot in package fields
+# another function in package gplots
+# ggplot2
+# levelplot in package lattice
 
 
 
