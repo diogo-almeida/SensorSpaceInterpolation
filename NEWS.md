@@ -1,3 +1,7 @@
+# Version 0.1.1.900 (major.minor.patch.dev versioning scheme): June 2, 2015
+
+* Added example dataset (erp.epoch).
+
 # Version 0.1.0.900 (major.minor.patch.dev versioning scheme): June 2, 2015
 
 * Basic bare bones routines for sensor space interpolation, using linear, cubic 

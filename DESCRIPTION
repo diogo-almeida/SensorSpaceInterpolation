@@ -1,7 +1,7 @@
 Package: SensorSpaceInterpolation
 Type: Package
 Title: Interpolates EEG/MEG data from sensors onto a cartesian space.
-Version: 0.0.1
+Version: 0.1.1
 Date: 2015-06-01
 Author: Diogo Almeida
 Maintainer: Diogo Almeida <dalazal@gmail.com>
@@ -14,4 +14,5 @@ Imports: plyr,
     rgcvpack
 Suggests: ggplot2,
     fields,
-    colorspace
+    colorspace,
+    reshape2

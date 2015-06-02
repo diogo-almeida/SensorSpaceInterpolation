@@ -17,6 +17,17 @@ y <- c(0.35, 0.35, 0.21, 0.19, 0.18, 0.19, 0.21, 0.14, 0.10, 0.10, 0.14, 0, 0, 0
 # ERP data (from package csd toolbox)
 path <- "/Users/diogoalmeida/Google Drive/Rcode/" 
 erpdata <- as.matrix(read.delim(paste(path,"NR_C66_trr.dat", sep = ""), sep = "", header = F))
+elecnames <- as.matrix(read.delim(paste(path,"E31.asc", sep = ""), sep = "", header = F))
+sample.n  <- seq_len(nrow(erpdata))
+time.t    <- seq(from = 0L, by = 5L, length.out = nrow(erpdata)) 
+colnames(erpdata) <- elecnames
+rownames(erpdata) <- time.t
+erp.epoch <- reshape2::melt(erpdata, varnames = c("Time", "Electrode"), value.name = "mV")
+
+x.loc <- rep(x, each = length(time.t))
+y.loc <- rep(y, each = length(time.t))
+erp.epoch <- data.frame(x = x.loc, y = y.loc, erp.epoch)
+
 
 
 devtools::use_package("plyr")
@@ -26,6 +37,8 @@ devtools::use_package("tripack")
 devtools::use_package("colorspace")
 devtools::use_package("ggplot2", "Suggests")
 devtools::use_package("fields", "Suggests")
+devtools::use_package("reshape2", "Suggests")
+devtools::use_data(erp.epoch, overwrite = TRUE)
 
 test <- InterpolatePotentials(potentials = erpdata, x.elec = x, y.elec = y, grid.grain = 40, extrapolate = TRUE, method = "tps", electrode.dim = 1)
 str(test)
