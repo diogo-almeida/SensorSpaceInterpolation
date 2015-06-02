@@ -63,13 +63,20 @@ with(test3$'1', image(x = x, y = y, z = z, useRaster = TRUE,
 
 library(fields)
 with(test3$'1', 
-     image.plot(x = x, y = y, z = z, useRaster = TRUE, nlevel = 11))
+     image.plot(x = x, y = y, z = z, useRaster = TRUE, nlevel = 64))
              
 with(test3$'1', 
      image.plot(x = x, y = y, z = z, useRaster = TRUE, 
                 col = colorspace::diverge_hcl(11, h = c(260, 0), c = 100,
                                               l = c(30, 100), power = 1.5,
                                               fixup = TRUE)))
+
+with(test3$'1', 
+     image.plot(x = x, y = y, z = z, useRaster = TRUE, bty = "n", axes = "F", ann = "F",
+                col = colorspace::diverge_hcl(11, h = c(260, 0), c = 100,
+                                              l = c(30, 100), power = 1.5,
+                                              fixup = TRUE)))
+
 
 
 library(ggplot2)
@@ -118,13 +125,17 @@ df <- data.frame(
   x = sin(angle) * max(abs(new.df[!is.na(new.df$z), ]$x)) * 1.015, 
   y = cos(angle) * max(abs(new.df[!is.na(new.df$z), ]$y)) * 1.015
 )
+##
+## for eeg plots, negative is generally blue
+##
 ggplot(new.df[!is.na(new.df$z), ], 
        aes(x = x, y = y, fill = cut(z, breaks = symm.breaks, labels = FALSE))) + 
   geom_raster(interpolate = TRUE) + 
-  scale_fill_gradient2(midpoint = mean(1:nb.colors),
+  scale_fill_gradient2(space = "Lab", high = scales::muted("red"), low = scales::muted("blue"), 
+                       midpoint = mean(1:nb.colors),
                        limits = range(1:nb.colors),
                        breaks = seq(1, nb.colors, length = 3),
-                       labels = list(expression(alpha), expression(beta), expression(zeta)), #MakeSymmetricLabels(new.df$z, multiplication.factor = 1, unit = "mv"),
+                       labels = MakeSymmetricLabels(new.df$z, multiplication.factor = 1, unit = "mv"),
                        name = "goo"
   ) +
   theme_bw() + 
@@ -141,3 +152,93 @@ ggplot(new.df[!is.na(new.df$z), ],
   coord_fixed() 
 
 
+##
+## SIMULATE THE PLOTS BY THE KAYSER & TENKE GROUP
+## I think they use something very similar to the Spectral scale in ColorBrewer
+##
+# scales::show_col(scales::brewer_pal("qual", palette = "Spectral")(11))
+# scales::show_col(scales::gradient_n_pal(my.pal)(seq(0, 1, length = 30)))
+#
+# 7 point scale
+# magenta-ish, purple-ish, red-ish, yellowish, greenish, bluish, orchid.
+# R colors
+# plum1, 
+# c("violet", "magenta", "red", "yellow", "green", "blue", "mediumpurple")
+# orchid1, magenta3, red1, yellow1, green1, blue4, mediumpurple1
+#170, 170, 252
+#18, 24, 188
+#43, 253, 165
+#254, 241, 53
+#252, 34, 28
+#215, 32, 202
+#246, 161, 243
+#
+jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+nb.colors <- 64
+symm.breaks <- MakeSymmetricCuts(new.df$z[!is.na(new.df$z)], nb.colors)
+my.pal <- scales::brewer_pal("qual", palette = "Spectral")(11)
+my.pal.2 <- scales::gradient_n_pal(my.pal)(seq(0, 1, length = nb.colors))
+my.pal.3 <- scales::gradient_n_pal(c("violet", "magenta", "red", "yellow", "green", "blue", "mediumpurple"))(seq(0, 1, length = nb.colors))
+my.pal.4 <- scales::gradient_n_pal(c("orchid1", "magenta3", "red1", "yellow1", "green1", "blue4", "mediumpurple1"))(seq(0, 1, length = nb.colors))
+my.pal.5 <- rev(jet.colors(nb.colors))
+#
+ggplot(new.df[!is.na(new.df$z), ], 
+       aes(x = x, y = y, fill = cut(z, breaks = symm.breaks, labels = FALSE))) + 
+  geom_raster(interpolate = TRUE) + 
+  scale_fill_gradientn(space = "Lab", colours = rev(my.pal.5),
+                       limits = range(1:nb.colors),
+                       breaks = seq(1, nb.colors, length = 3),
+                       labels = MakeSymmetricLabels(new.df$z, multiplication.factor = 1, unit = "mv")
+                       ) +
+  theme_bw() + 
+  theme(line = element_blank(),
+        title = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "bottom",
+        #legend.position = "right",
+        plot.margin = unit(c(-4, 0, -4, -1.5), "cm")
+  ) + guides(fill = guide_colorbar(nbin = nb.colors)) +
+  coord_fixed() + geom_path(aes(x, y), data = df , inherit.aes = FALSE)
+
+#
+#
+test.plot <- ggplot(new.df[!is.na(new.df$z), ], 
+       aes(x = x, y = y, fill = cut(z, breaks = symm.breaks, labels = FALSE))) + 
+  geom_raster(interpolate = TRUE) + 
+  scale_fill_gradientn(space = "Lab", colours = rev(my.pal.5),
+                       limits = range(1:nb.colors),
+                       breaks = seq(1, nb.colors, length = 3),
+                       labels = MakeSymmetricLabels(new.df$z, multiplication.factor = 1, unit = "mv")
+  ) +
+  theme_bw() + 
+  theme(line = element_blank(),
+        title = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.border = element_blank(),
+        #legend.position = "bottom",
+        legend.position = "right",
+        #legend.key.height = unit(3, "cm"),
+        #legend.key.height = unit(0.15, "npc"),        
+        legend.justification = "left",
+        plot.margin = unit(c(0, 0, 0, 0), "cm")
+  ) + guides(fill = guide_colorbar(nbin = nb.colors)) +
+  coord_fixed() + geom_path(aes(x, y), data = df , inherit.aes = FALSE)
+
+
+#
+# inspect the plot object
+# http://stackoverflow.com/questions/29749661/ggplot2-how-to-match-legend-height-to-plot-area
+# http://stackoverflow.com/questions/16255579/how-can-i-make-consistent-width-plots-in-ggplot-with-legends
+# http://www.noamross.net/blog/2013/11/20/formatting-plots-for-pubs.html
+gp <- ggplot_gtable(ggplot_build(test.plot)) 
+leg <- gtable_filter(gp, "guide-box")
+leg[[1]][[1]][[1]][[1]]$heights
+leg[[1]][[1]]$heights[[2]]
+
+#
+# Independent color bar function
+# http://colbyimaging.duckdns.org:8080/wiki/statistics/color-bars
+#
